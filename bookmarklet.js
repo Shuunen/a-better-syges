@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         A Better Syges
 // @namespace    http://tampermonkey.net/
-// @version      0.0.3
+// @version      0.0.4
 // @description  for a better world!
 // @author       Romain Racamier-Lafon
 // @match        https://sygesweb.niji.fr/SYGESWEB/**
@@ -13,7 +13,7 @@
 
   var endpoint = 'https://';
 
-  if (typeof window.absLocal === 'undefined') {
+  if (typeof localStorage.absLocal === 'undefined') {
     endpoint += 'rawgit.com/Shuunen/a-better-syges/master';
   } else {
     endpoint += 'a-better-syges.io:8880';
