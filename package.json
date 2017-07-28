@@ -1,0 +1,23 @@
+{
+  "name": "a-better-syges",
+  "version": "0.0.1",
+  "description": "Enhanced Syges",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "nodemon": "^1.11.0",
+    "spdy": "^3.4.4"
+  },
+  "scripts": {
+    "start": "yarn && nodemon index.js --watch index.js"
+  },
+  "keywords": [
+    "syges"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NijiDigital/a-better-syges.git"
+  },
+  "author": "Romain Racamier-Lafon",
+  "license": "GPL-3.0"
+}
