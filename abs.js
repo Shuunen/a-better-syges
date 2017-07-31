@@ -1,10 +1,30 @@
 'use strict';
 
 const PAGES = {
+  error: 'error-page',
+  unknown: 'unknown-page',
   home: 'home-page',
   holiday: 'holiday-page',
   login: 'login-page',
   logout: 'logout-page'
+}
+
+const SERVICES = {
+  holiday: {
+    title: 'congés',
+    help: 'merci de saisir votre demande 2 mois avant la date de début.',
+    image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENABS.PNG'
+  },
+  activity: {
+    title: 'activité',
+    help: 'merci de saisir votre activité 3 jours minimum avant la fin du mois.',
+    image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENACT.PNG'
+  },
+  fees: {
+    title: 'frais',
+    help: 'merci d\'envoyer les justificatifs à votre assistante avant le 4ième jour ouvré du mois suivant.',
+    image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENFRS.PNG'
+  }
 }
 
 class Abs {
@@ -59,23 +79,26 @@ class Abs {
   getContext() {
     let pageId = window._PU_
     if (!pageId) {
-      return 'error-page'
+      return PAGES.error
     }
-    let context = 'unknown'
+    let context = PAGES.unknown
     if (pageId.indexOf('IDENTIFICATION') !== -1) {
       context = PAGES.login
     } else if (pageId.indexOf('SYW_ME_MENUV14') !== -1) {
       context = PAGES.home
+    } else if (pageId.indexOf('CNG_14_SAISIECONGES') !== -1) {
+      context = PAGES.holiday
     }
     this.context = context
   }
   updateContext() {
-    this.toast('Will update context : ' + this.context)
+    this.toast('will update context : ' + this.context)
     document.body.classList.add('abs')
     document.body.classList.add('abs-' + this.context)
 
     if (this.context === PAGES.home) {
       this.getPersonalData()
+      this.showMaskFor(PAGES.home)
     }
   }
   goto(page) {
@@ -92,6 +115,34 @@ class Abs {
       clWDUtil.pfGetTraitement('BTG_ACTM02', 0, undefined)(event)
     } else {
       this.log('cannot go to page "' + page + '" missing case')
+    }
+  }
+  showMaskFor(page) {
+    // remove if any
+    let existingMask = document.querySelector('abs-mask')
+    if (existingMask) {
+      existingMask.remove()
+    }
+    // create generic container
+    let mask = document.createElement('div')
+    mask.classList.add('abs-mask')
+    let html = ''
+    // fill wiwth custom content
+    if (page === PAGES.home) {
+      html += '<div class="abs-title">A Better Syges</div>'
+      html += '<div class="abs-welcome">Bonjour <em>' + this.firstName + '</em>.</div>'
+      html += '<div class="abs-services">'
+      for (var service in SERVICES) {
+        html += '<button style="background-image: url(\'' + SERVICES[service].image + '\')"><span>' + SERVICES[service].title + '</span></button>'
+      }
+      html += '</div>'
+    }
+    // if filled insert it
+    if (html.length) {
+      mask.innerHTML = html
+      document.body.appendChild(mask)
+    } else {
+      this.log('page "' + page + '" has no mask yet')
     }
   }
   getPersonalData() {
