@@ -4,9 +4,20 @@ Hello there :)
 
 This is a work in progress but feel free to open issues for bugs & feature requests.
 
+Also you're welcome to fork and submit pull-requests to improve this project.
+
 # What ?
 
-A Better Syges (abs) aim to improve Syges UI & UX
+A Better Syges (abs) aim to improve Syges UI & UX.
+
+Here is the list of features :
+
+[x] Light login page
+[x] Autofill login/password
+[x] Light home page
+[ ] Enhanced holiday page
+[ ] Enhanced activity page
+[ ] Enhanced fees page
 
 # Why ?
 
