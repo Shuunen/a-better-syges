@@ -39,6 +39,8 @@ class Abs {
     if (!localStorage.absAvoidNextMask) {
       this.showMask()
     } else {
+      // un-hide syges
+      document.body.removeAttribute('hidden')
       delete localStorage.absAvoidNextMask
     }
     this.startCron()
@@ -91,8 +93,12 @@ class Abs {
       context = PAGES.login
     } else if (pageId.indexOf('SYW_ME_MENUV14') !== -1) {
       context = PAGES.home
-    } else if (pageId.indexOf('CNG_14_SAISIECONGES') !== -1) {
+    } else if (pageId.indexOf('SAISIECONGES') !== -1) {
       context = PAGES.holiday
+    } else if (pageId.indexOf('SAISIEMENSUELLE') !== -1) {
+      context = PAGES.activity
+    } else if (pageId.indexOf('FRAISJOURNALIER') !== -1) {
+      context = PAGES.fees
     }
 
     if (context === PAGES.unknown) {
@@ -148,6 +154,8 @@ class Abs {
     }
   }
   hideMask() {
+    // un-hide syges
+    document.body.removeAttribute('hidden')
     let existingMask = document.querySelector('.abs-mask')
     if (existingMask) {
       existingMask.classList.add('closing')
