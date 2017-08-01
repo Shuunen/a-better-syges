@@ -227,12 +227,12 @@ class Abs {
           delete localStorage.absLogin
           delete localStorage.absPass
         }
-        // fill syges fields
+        // fill syges login/pass fields
         let loginField = document.querySelector('#SIE_LOGACC')
-        loginField.value = localStorage.absLogin
+        loginField.value = login
         this.triggerChange(loginField)
         let passField = document.querySelector('#SIE_MOTPAS')
-        passField.value = localStorage.absPass
+        passField.value = pass
         this.triggerChange(passField)
         // push syges login button
         clWDUtil.pfGetTraitement('BTN_VALCNX', 0, undefined)(null)
