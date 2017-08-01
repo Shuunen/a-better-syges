@@ -74,26 +74,34 @@ class Abs {
   }
   startCron() {
     this.lastContext = ''
-    setInterval(_ => {
+    this.cron = setInterval(_ => {
       this.getContext()
       if (this.context !== this.lastContext) {
+        this.log('context updated from "' + this.lastContext + '" to "' + this.context + '"')
         this.updateContext()
       }
       this.lastContext = this.context
     }, 1000)
   }
   getContext() {
-    let pageId = window._PU_
-    if (!pageId) {
-      return PAGES.error
-    }
+    let pageId = window._PU_ || ''
     let context = PAGES.unknown
+
     if (pageId.indexOf('IDENTIFICATION') !== -1) {
       context = PAGES.login
     } else if (pageId.indexOf('SYW_ME_MENUV14') !== -1) {
       context = PAGES.home
     } else if (pageId.indexOf('CNG_14_SAISIECONGES') !== -1) {
       context = PAGES.holiday
+    }
+
+    if (context === PAGES.unknown) {
+      let pageContent = document.body.textContent.trim().replace(/\s+/g, ' ')
+      if (pageContent.indexOf('ERR_ALREADYCONNECTED') !== -1) {
+        this.log('haha now you\'re lost into syges magic errors, you have to wait from few seconds to minutes, pray & reload the page.')
+        this.log('may the pasta be with you !')
+        clearInterval(this.cron)
+      }
     }
     this.context = context
   }
@@ -102,7 +110,10 @@ class Abs {
     document.body.classList.add('abs')
     document.body.classList.add('abs-' + this.context)
 
-    if (this.context === PAGES.home) {
+    if (this.context === PAGES.login) {
+      this.showMask()
+      this.tryPrefill()
+    } else if (this.context === PAGES.home) {
       this.getPersonalData()
       this.showMask()
     } else {
@@ -157,7 +168,15 @@ class Abs {
       html += '</div>'
     }
     // per pages
-    if (this.context === PAGES.home) {
+    if (this.context === PAGES.login) {
+      html += '<div class="abs-welcome">Bienvenue, merci de vous identifier.</div>'
+      html += '<form id="absLoginForm" name="absLoginForm">'
+      html += '   <div class="abs-line text"><input required id="absLogin" name="absLogin" /><label for="absLogin">Identifiant</label><span class="abs-bar"></span></div>'
+      html += '   <div class="abs-line text"><input required type="password" id="absPass" name="absPass" /><label for="absPass">Mot de passe</label><span class="abs-bar"></span></div>'
+      html += '   <div class="abs-line check"><label><input type="checkbox" ' + (localStorage.absLogin ? 'checked="checked"' : '') + ' id="absKeep" name="absKeep" /> mémoriser ?</label></div>'
+      html += '   <button type="submit">Se connecter</button>'
+      html += '</form>'
+    } else if (this.context === PAGES.home) {
       html += '<div class="abs-welcome">Bonjour <span>' + this.firstName + '</span>.</div>'
       html += '<div class="abs-services">'
       for (var i in SERVICES) {
@@ -174,14 +193,43 @@ class Abs {
     } else {
       existingMask.innerHTML += html
     }
-    this.addClickListeners()
+    // un-hide syges
+    document.body.removeAttribute('hidden')
+    this.addListeners()
   }
-  addClickListeners() {
+  triggerChange(el) {
+    el.dispatchEvent(new KeyboardEvent('change'))
+  }
+  addListeners() {
     document.querySelector('.abs-icon-close').addEventListener('click', e => {
       this.log('clicked on close icon')
       this.hideMask()
     })
-    if (this.context === PAGES.home) {
+    if (this.context === PAGES.login) {
+      document.querySelector('#absLoginForm').addEventListener('submit', e => {
+        e.preventDefault()
+        let login = document.querySelector('#absLogin').value
+        let pass = document.querySelector('#absPass').value
+        let doKeep = document.querySelector('#absKeep').checked
+        // update local storage
+        if (doKeep) {
+          localStorage.absLogin = login
+          localStorage.absPass = pass
+        } else {
+          delete localStorage.absLogin
+          delete localStorage.absPass
+        }
+        // fill syges fields
+        let loginField = document.querySelector('#SIE_LOGACC')
+        loginField.value = localStorage.absLogin
+        this.triggerChange(loginField)
+        let passField = document.querySelector('#SIE_MOTPAS')
+        passField.value = localStorage.absPass
+        this.triggerChange(passField)
+        // push syges login button
+        clWDUtil.pfGetTraitement('BTN_VALCNX', 0, undefined)(null)
+      })
+    } else if (this.context === PAGES.home) {
       document.querySelector('.abs-services button.' + PAGES.holiday).addEventListener('click', e => {
         this.goto(PAGES.holiday)
       })
@@ -191,6 +239,16 @@ class Abs {
       document.querySelector('.abs-services button.' + PAGES.fees).addEventListener('click', e => {
         this.goto(PAGES.fees)
       })
+    }
+  }
+  tryPrefill() {
+    let login = document.querySelector('#absLogin')
+    let pass = document.querySelector('#absPass')
+    if (login && localStorage.absLogin) {
+      login.value = localStorage.absLogin
+    }
+    if (pass && localStorage.absPass) {
+      pass.value = localStorage.absPass
     }
   }
   getPersonalData() {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         A Better Syges
 // @namespace    http://tampermonkey.net/
-// @version      0.0.4
+// @version      0.0.5
 // @description  for a better world!
 // @author       Romain Racamier-Lafon
 // @match        https://sygesweb.niji.fr/SYGESWEB/**
@@ -10,6 +10,9 @@
 
 (function () {
   'use strict';
+
+  // first hide content
+  document.body.setAttribute('hidden', '');
 
   var endpoint = 'https://';
 
