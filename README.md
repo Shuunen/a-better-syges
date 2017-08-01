@@ -12,12 +12,14 @@ A Better Syges (abs) aim to improve Syges UI & UX.
 
 Here is the list of features :
 
-[x] Light login page
-[x] Autofill login/password
-[x] Light home page
-[ ] Enhanced holiday page
-[ ] Enhanced activity page
-[ ] Enhanced fees page
+- [x] Light login page
+- [x] Autofill login/password
+- [x] Light home page
+- [ ] Enhanced holiday page
+- [ ] Enhanced activity page
+- [ ] Enhanced fees page
+
+(un-checked are planned features)
 
 # Why ?
 
