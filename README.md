@@ -2,7 +2,7 @@
 
 Hello there :)
 
-This is a work in progress.
+This is a work in progress but feel free to open issues for bugs & feature requests.
 
 # What ?
 
@@ -23,4 +23,10 @@ Abs will enhance Syges while you are browsing [https://sygesweb.niji.fr/](https:
 
 # Develop locally
 
-Set this is your browser : `localStorage.absLocal = true`
+Set this in your browser : `localStorage.absLocal = true`
+Then yarn & yarn start
+This will serve abs.js & abs.css files and the user script will use your local files instead of those hosted on this repo
+
+# Thanks
+
+- Icons : https://www.iconfinder.com/iconsets/audio-controls-ui-icons

@@ -5,6 +5,8 @@ const PAGES = {
   unknown: 'unknown-page',
   home: 'home-page',
   holiday: 'holiday-page',
+  activity: 'activity-page',
+  fees: 'fees-page',
   login: 'login-page',
   logout: 'logout-page'
 }
@@ -12,16 +14,19 @@ const PAGES = {
 const SERVICES = {
   holiday: {
     title: 'congés',
+    page: PAGES.holiday,
     help: 'merci de saisir votre demande 2 mois avant la date de début.',
     image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENABS.PNG'
   },
   activity: {
     title: 'activité',
+    page: PAGES.activity,
     help: 'merci de saisir votre activité 3 jours minimum avant la fin du mois.',
     image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENACT.PNG'
   },
   fees: {
     title: 'frais',
+    page: PAGES.fees,
     help: 'merci d\'envoyer les justificatifs à votre assistante avant le 4ième jour ouvré du mois suivant.',
     image: 'https://sygesweb.niji.fr/SYGESWEB_WEB/SYW_IMAG/S14_IMABTG/SYW_B14_MENFRS.PNG'
   }
@@ -31,11 +36,12 @@ class Abs {
   constructor() {
     this.log('init')
     window.absInjected = true
-    this.injectAlertify()
-      .then(_ => {
-        this.toast('A Better Syges started :)')
-        this.startCron()
-      })
+    if (!localStorage.absAvoidNextMask) {
+      this.showMask()
+    } else {
+      delete localStorage.absAvoidNextMask
+    }
+    this.injectAlertify().then(_ => this.startCron())
   }
   log(str) {
     console.log(str)
@@ -92,23 +98,38 @@ class Abs {
     this.context = context
   }
   updateContext() {
-    this.toast('will update context : ' + this.context)
+    this.log('updating context : ' + this.context)
     document.body.classList.add('abs')
     document.body.classList.add('abs-' + this.context)
 
-    if (this.context === PAGES.home) {
+    if (this.context === PAGES.login) {
+      this.showMask()
+    } else if (this.context === PAGES.home) {
       this.getPersonalData()
-      this.showMaskFor(PAGES.home)
+      this.showMask()
+    } else {
+      // if no mask created yet for the current context
+      this.hideMask()
     }
   }
   goto(page) {
+    this.log('going to page : ' + page)
     let event = null // event should be the mouseclick browser event
     // but syges doesn't care this to be null
     if (page === PAGES.home) {
       // these kind of weird code are stolen from the onclick= syges-web buttons
       clWDUtil.pfGetTraitement('BTG_RETMEN', 0, undefined)(event)
     } else if (page === PAGES.holiday) {
+      localStorage.absAvoidNextMask = true
       _PAGE_.ZRP_MENPRI.value = 2
+      clWDUtil.pfGetTraitement('BTG_ACTM01', 0, undefined)(event)
+    } else if (page === PAGES.activity) {
+      localStorage.absAvoidNextMask = true
+      _PAGE_.ZRP_MENPRI.value = 3
+      clWDUtil.pfGetTraitement('BTG_ACTM01', 0, undefined)(event)
+    } else if (page === PAGES.fees) {
+      localStorage.absAvoidNextMask = true
+      _PAGE_.ZRP_MENPRI.value = 4
       clWDUtil.pfGetTraitement('BTG_ACTM01', 0, undefined)(event)
     } else if (page === PAGES.logout) {
       _PAGE_.ZRP_MENPRI.value = 1
@@ -117,32 +138,61 @@ class Abs {
       this.log('cannot go to page "' + page + '" missing case')
     }
   }
-  showMaskFor(page) {
-    // remove if any
-    let existingMask = document.querySelector('abs-mask')
+  hideMask() {
+    let existingMask = document.querySelector('.abs-mask')
     if (existingMask) {
-      existingMask.remove()
+      existingMask.classList.add('closing')
+      setTimeout(_ => {
+        existingMask.remove()
+      }, 1000)
     }
-    // create generic container
-    let mask = document.createElement('div')
-    mask.classList.add('abs-mask')
+  }
+  showMask() {
     let html = ''
-    // fill wiwth custom content
-    if (page === PAGES.home) {
+    let existingMask = document.querySelector('.abs-mask')
+    // for all pages
+    if (!existingMask) {
       html += '<div class="abs-title">A Better Syges</div>'
+      html += '<div class="abs-icons">'
+      html += '   <a class="abs-icon abs-icon-info" title="Github" href="https://github.com/Shuunen/a-better-syges" target="_blank"></a>'
+      html += '   <div class="abs-icon abs-icon-close" title="Fermer"></div>'
+      html += '</div>'
+    }
+    // per pages
+    if (this.context === PAGES.home) {
       html += '<div class="abs-welcome">Bonjour <em>' + this.firstName + '</em>.</div>'
       html += '<div class="abs-services">'
-      for (var service in SERVICES) {
-        html += '<button style="background-image: url(\'' + SERVICES[service].image + '\')"><span>' + SERVICES[service].title + '</span></button>'
+      for (var i in SERVICES) {
+        html += '<button class="' + SERVICES[i].page + '" style="background-image: url(\'' + SERVICES[i].image + '\')"><span>' + SERVICES[i].title + '</span></button>'
       }
       html += '</div>'
     }
-    // if filled insert it
-    if (html.length) {
+    // insert & listen
+    if (!existingMask) {
+      let mask = document.createElement('div')
+      mask.classList.add('abs-mask')
       mask.innerHTML = html
       document.body.appendChild(mask)
     } else {
-      this.log('page "' + page + '" has no mask yet')
+      existingMask.innerHTML += html
+    }
+    this.addClickListeners()
+  }
+  addClickListeners() {
+    document.querySelector('.abs-icon-close').addEventListener('click', e => {
+      this.log('clicked on close icon')
+      this.hideMask()
+    })
+    if (this.context === PAGES.home) {
+      document.querySelector('.abs-services button.' + PAGES.holiday).addEventListener('click', e => {
+        this.goto(PAGES.holiday)
+      })
+      document.querySelector('.abs-services button.' + PAGES.activity).addEventListener('click', e => {
+        this.goto(PAGES.activity)
+      })
+      document.querySelector('.abs-services button.' + PAGES.fees).addEventListener('click', e => {
+        this.goto(PAGES.fees)
+      })
     }
   }
   getPersonalData() {
@@ -173,4 +223,4 @@ class Abs {
   }
 }
 
-let abs = new Abs();
+window.abs = new Abs();

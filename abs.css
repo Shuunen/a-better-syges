@@ -1,29 +1,19 @@
-/* Forms */
-input {
-  border-radius: 4px;
-  border: 1px solid;
-  padding: 10px;
-  font-style: normal;
-}
+/**
+* Table of content :
+* 1) Mask : the container that will be displayed on top of syges web page
+* 2) Services : the various services accessible (activity, fees, holidays)
+* 3) Icons : the small amount of icons displayed in mask
+**/
 
-/* Modals, errors */
-.Warning-02.Attention-2 {
-  position: fixed;
-  top: 20%;
-  width: 700px;
-  margin: auto;
-  padding: 20px !important;
-  opacity: 1 !important;
-}
-
-/* Mask */
+/**
+* 1) Mask
+**********************/
 .abs-mask {
   position: fixed;
   top: 0;
   left: 0;
-  height: 30%;
+  height: 100%;
   width: 100%;
-  /*background: cornflowerblue;*/
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAEDSURBVCjPVZIxlsUwCAO5//mQfQjz0zPVFoCTLZL4ISSMFFMKEdTbEc5UDN3zwREbZ+NEyuKiB6EcFREY8XbiKJ+MFMpNmHI6lcKJ3KWfwnLnwXGUuzWdp7pNOTcRqrmMmuHdXU/1xTAv9u4UiIVjBLu7vZXPzLBxJfKh3DoIz0VgOHPLk8Xw2gk38d1gZju/8jZFpBC7NsidzkEsK9Xy5GGjVO6ebK1yGL6uH8vKdxEE6tOkY5+EpnYo5bCa5x9393XBXrfbW72o1b6Vl3d1vlbTspkZl1/MSdNxFqczFI5d7KBGr7bN5nHvNfn+/v238fHH+bHs48Cg2Vgzp/pyg4X+AIM3zcvWykU3AAAAAElFTkSuQmCC');
   display: flex;
   flex-direction: column;
@@ -31,45 +21,94 @@ input {
   justify-content: center;
   align-items: center;
   z-index: 100;
+  transition: opacity .6s;
 }
-
+.abs-mask.closing {
+  opacity: 0;
+}
 .abs-title {
   text-transform: uppercase;
   font-family: monospace;
   color: grey;
   font-size: 16px;
 }
+.abs-welcome {
+  margin: 16px 0;
+}
 
+/**
+* 2) Services
+**********************/
+.abs-services {
+  margin-bottom: 20%;
+}
 .abs-services button {
   border: none;
   height: 128px;
   width: 128px;
   background-position-x: center;
   background-repeat: no-repeat;
-  margin: 10px;
+  margin: 12px;
   outline: none;
   background-color: transparent;
   color: white;
   box-shadow: 0 0 2px white;
-  transition: color .3s;
   overflow: hidden;
   padding: 0;
+  transition: box-shadow .3s;
+  position: relative;
+  border-radius: 50%;
 }
-
 .abs-services button span {
   text-transform: uppercase;
   font-weight: bold;
   padding: 6px;
+  line-height: 23px;
   font-size: 16px;
-  border-width: 7px 0;
-  border-style: double;
-  text-shadow: 0 0 4px black;
+  letter-spacing: -.4px;
   width: 90%;
   display: block;
   margin: auto;
-  background-color: rgba(255, 255, 255, .37);
+  background-color: rgba(0, 0, 0, .5);
+  position: absolute;
+  top: calc(50% - 16px);
+}
+.abs-services button:hover {
+  box-shadow: 0 0 2px white;
+}
+.abs-services button:nth-child(1) span {
+  text-shadow: -1px 2px 4px black;
+}
+.abs-services button:nth-child(2) span {
+  text-shadow: 0 2px 4px black;
+}
+.abs-services button:nth-child(3) span {
+  text-shadow: 1px 2px 4px black;
 }
 
-.abs-services button:hover {
-  color: cadetblue;
+/**
+* 3) Icons
+**********************/
+.abs-icons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+}
+.abs-icon {
+  height: 40px;
+  width: 40px;
+  background-size: 40px;
+  opacity: .5;
+  cursor: pointer;
+  margin-left: 12px;
+}
+.abs-icon-refresh {
+  background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E %3Cpath d=\'M20 40C9 40 0 31 0 20S9 0 20 0c4.5 0 8.7 1.5 12.3 4.2.4.3.5 1 .2 1.4-.3.4-1 .5-1.4.2C28 3.3 24 2 20 2 10 2 2 10 2 20s8 18 18 18 18-8 18-18c0-3.2-1-6.4-2.5-9.2-.3-.5 0-1 .3-1.4.5-.3 1 0 1.4.3C39 13 40 16.4 40 20c0 11-9 20-20 20z\'/%3E %3Cpath d=\'M30.5 20c0 .6-.4 1-1 1-.5 0-1-.4-1-1 0-4.7-3.8-8.6-8.5-8.6s-8.5 3.8-8.5 8.6c0 4.7 3.8 8.6 8.5 8.6L18.3 27c-.4-.5-.4-1 0-1.5.4-.4 1-.4 1.4 0l3 3 .3.2.2.2c.2 0 .3.3.3.6s0 .5-.3.7l-3.4 3.4-.8.3s-.5 0-.7-.3c-.4-.4-.4-1 0-1.4l1.7-1.7C14.2 30.6 9.5 26 9.5 20S14.2 9.4 20 9.4 30.5 14.2 30.5 20z\'/%3E %3C/svg%3E ');
+}
+.abs-icon-info {
+  background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E %3Cpath d=\'M20 25.3c-.6 0-1-.4-1-1V20c0-.7.4-1 1-1 2.2 0 4-2 4-4s-1.8-4-4-4-4 1.7-4 4c0 .5-.4 1-1 1s-1-.5-1-1c0-3.4 2.7-6 6-6s6 2.6 6 6c0 3-2.2 5.3-5 5.8v3.5c0 .6-.4 1-1 1z\'/%3E %3Cpath d=\'M20 40C9 40 0 31 0 20S9 0 20 0c4.5 0 8.7 1.5 12.3 4.2.4.3.5 1 .2 1.4-.3.4-1 .5-1.4.2C28 3.3 24 2 20 2 10 2 2 10 2 20s8 18 18 18 18-8 18-18c0-3.2-1-6.4-2.5-9.2-.3-.5 0-1 .3-1.4.5-.3 1 0 1.4.3C39 13 40 16.4 40 20c0 11-9 20-20 20z\'/%3E %3Cpath d=\'M20 32.5c-.6 0-1-.4-1-1v-2.7c0-.6.4-1 1-1s1 .4 1 1v2.7c0 .6-.4 1-1 1z\'/%3E %3C/svg%3E ');
+}
+.abs-icon-close {
+  background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E %3Cpath d=\'M28 26.8c.5.4.5 1 0 1.4 0 .2-.4.3-.6.3s-.5 0-.7-.3L20 21.4l-7 6.8c0 .2-.4.3-.6.3s-.5 0-.7-.3c-.4-.4-.4-1 0-1.4l6.8-6.8-6.8-6.8c-.4-.4-.4-1 0-1.4.4-.4 1-.4 1.4 0l7 6.8 6.7-6.8c.4-.4 1-.4 1.4 0 .5.4.5 1 0 1.4L21.4 20l6.8 6.8z\'/%3E %3Cpath d=\'M20 40C9 40 0 31 0 20S9 0 20 0c4.4 0 8.6 1.5 12.2 4.2.4.3.5 1 .2 1.4-.3.4-1 .5-1.4.2C27.8 3.3 24 2 20 2 10 2 2 10 2 20s8 18 18 18 18-8 18-18c0-3.2-1-6.4-2.5-9.2-.3-.5 0-1 .3-1.4.5-.3 1 0 1.4.3C39 12.7 40 16.3 40 20c0 11-9 20-20 20z\'/%3E %3C/svg%3E ');
 }
