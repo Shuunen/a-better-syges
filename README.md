@@ -14,7 +14,8 @@ Because, in my opinion, Syges UI ugly & bloatered.
 
 Here is how it looks like with ABS actually :
 
-![ABS Screenshot](http://i.imgur.com/xW5LVYS.png)
+![ABS Login](http://i.imgur.com/7FYPUpz.png)
+![ABS Home](http://i.imgur.com/r55GmSt.png)
 
 # How ?
 
