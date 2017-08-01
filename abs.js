@@ -41,7 +41,7 @@ class Abs {
     } else {
       delete localStorage.absAvoidNextMask
     }
-    this.injectAlertify().then(_ => this.startCron())
+    this.startCron()
   }
   log(str) {
     console.log(str)
@@ -102,9 +102,7 @@ class Abs {
     document.body.classList.add('abs')
     document.body.classList.add('abs-' + this.context)
 
-    if (this.context === PAGES.login) {
-      this.showMask()
-    } else if (this.context === PAGES.home) {
+    if (this.context === PAGES.home) {
       this.getPersonalData()
       this.showMask()
     } else {
