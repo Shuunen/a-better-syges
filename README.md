@@ -14,7 +14,7 @@ Because, in my opinion, Syges UI ugly & bloatered.
 
 Here is how it looks like with ABS actually :
 
-![ABS Screenshot](http://i.imgur.com/qqcoQup.png)
+![ABS Screenshot](http://i.imgur.com/xW5LVYS.png)
 
 # How ?
 
@@ -40,4 +40,8 @@ Then you can `yarn` & `yarn start` and this will serve abs.js & abs.css files ov
 
 # Thanks
 
-- Icons : https://www.iconfinder.com/iconsets/audio-controls-ui-icons
+- Icons : [The Eyecons](https://www.iconfinder.com/iconsets/audio-controls-ui-icons)
+- Svg to data uri : [Taylor Hunt](https://codepen.io/tigt/post/optimizing-svgs-in-data-uris)
+- User script hoster : [GreasyFork](https://greasyfork.org)
+- User script manager : [TamperMonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+- Base64 encoder : [Dominik Hanke](https://www.base64-image.de/)

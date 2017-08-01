@@ -14,11 +14,12 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAEDSURBVCjPVZIxlsUwCAO5//mQfQjz0zPVFoCTLZL4ISSMFFMKEdTbEc5UDN3zwREbZ+NEyuKiB6EcFREY8XbiKJ+MFMpNmHI6lcKJ3KWfwnLnwXGUuzWdp7pNOTcRqrmMmuHdXU/1xTAv9u4UiIVjBLu7vZXPzLBxJfKh3DoIz0VgOHPLk8Xw2gk38d1gZju/8jZFpBC7NsidzkEsK9Xy5GGjVO6ebK1yGL6uH8vKdxEE6tOkY5+EpnYo5bCa5x9393XBXrfbW72o1b6Vl3d1vlbTspkZl1/MSdNxFqczFI5d7KBGr7bN5nHvNfn+/v238fHH+bHs48Cg2Vgzp/pyg4X+AIM3zcvWykU3AAAAAElFTkSuQmCC');
+  background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/seigaiha.png');
   display: flex;
   flex-direction: column;
   line-height: 2;
-  justify-content: center;
+  padding-top: 120px;
+  justify-content: flex-start;
   align-items: center;
   z-index: 100;
   transition: opacity .6s;
@@ -29,19 +30,18 @@
 .abs-title {
   text-transform: uppercase;
   font-family: monospace;
-  color: grey;
-  font-size: 16px;
+  color: silver;
+  font-size: 26px;
 }
 .abs-welcome {
   margin: 16px 0;
+  font-size: 18px;
+  font-family: sans-serif;
 }
 
 /**
 * 2) Services
 **********************/
-.abs-services {
-  margin-bottom: 30%;
-}
 .abs-services button {
   border: none;
   height: 128px;

@@ -158,7 +158,7 @@ class Abs {
     }
     // per pages
     if (this.context === PAGES.home) {
-      html += '<div class="abs-welcome">Bonjour <em>' + this.firstName + '</em>.</div>'
+      html += '<div class="abs-welcome">Bonjour <span>' + this.firstName + '</span>.</div>'
       html += '<div class="abs-services">'
       for (var i in SERVICES) {
         html += '<button class="' + SERVICES[i].page + '" style="background-image: url(\'' + SERVICES[i].image + '\')"><span>' + SERVICES[i].title + '</span></button>'
