@@ -12,7 +12,7 @@ A Better Syges (abs) aim to improve Syges UI & UX
 
 Because, in my opinion, Syges UI ugly & bloatered.
 
-Here is how it looks like with ABS actually : 
+Here is how it looks like with ABS actually :
 
 ![ABS Screenshot](http://i.imgur.com/qqcoQup.png)
 
@@ -26,10 +26,17 @@ Then the [ABS user script](https://greasyfork.org/fr/scripts/31837-a-better-syge
 
 # Develop locally
 
-- Set this in your browser : `localStorage.absLocal = true`
-- `yarn` & `yarn start`
+By default, [ABS user script](https://greasyfork.org/fr/scripts/31837-a-better-syges) will get the ABS files hosted on this repo.
 
-This will serve abs.js & abs.css files and the user script will use your local files instead of those hosted on this repo
+You can by-pass this behaviour by setting this in your browser : `localStorage.absLocal = true`
+
+This will inform [ABS user script](https://greasyfork.org/fr/scripts/31837-a-better-syges) to use files hosted on https://a-better-syges.io:8880 instead.
+
+Create an entry in your host file with `a-better-syges.io   127.0.0.1`
+
+Then generate some certificates in the cert folder, I made a script to do it for you. It will generates certs & install it on your local machine so your browser won't throw you an invalid https cert error.
+
+Then you can `yarn` & `yarn start` and this will serve abs.js & abs.css files over https (which is required because Syges is also over https).
 
 # Thanks
 
