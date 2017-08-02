@@ -35,6 +35,7 @@ const SERVICES = {
 class Abs {
   constructor() {
     this.log('init')
+    this.startTime = this.getTimestamp()
     window.absInjected = true
     if (!localStorage.absAvoidNextMask) {
       this.showMask()
@@ -50,6 +51,9 @@ class Abs {
   }
   toast(str) {
     alertify.notify(str)
+  }
+  getTimestamp() {
+    return Math.round(new Date().getTime() / 1000)
   }
   injectAlertify() {
     return new Promise((resolve, reject) => {
@@ -77,13 +81,25 @@ class Abs {
   startCron() {
     this.lastContext = ''
     this.cron = setInterval(_ => {
+      // check context
       this.getContext()
       if (this.context !== this.lastContext) {
         this.log('context updated from "' + this.lastContext + '" to "' + this.context + '"')
         this.updateContext()
       }
       this.lastContext = this.context
+      // refresh page to avoid session timeout
+      let minutesSinceInit = Math.round(((this.getTimestamp() - this.startTime) / 60) * 100) / 100
+      if (this.onAuthenticatedPage() && minutesSinceInit > 2) {
+        this.reloadPage()
+      }
     }, 1000)
+  }
+  onAuthenticatedPage() {
+    return ([PAGES.home, PAGES.activity, PAGES.holiday, PAGES.fees].indexOf(this.context) !== -1)
+  }
+  reloadPage() {
+    _JSL(_PAGE_, 'BTN_FERPAG', '_self', '', '')
   }
   getContext() {
     let pageId = window._PU_ || ''
