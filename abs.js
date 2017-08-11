@@ -36,6 +36,7 @@ class Abs {
   constructor() {
     this.log('init')
     this.startTime = this.getTimestamp()
+    this.activityLineActive = 0
     window.absInjected = true
     if (!localStorage.absAvoidNextMask) {
       this.showMask()
@@ -88,15 +89,26 @@ class Abs {
         this.updateContext()
       }
       this.lastContext = this.context
-      // refresh page to avoid session timeout
+      // try to avoid session timeout
       let minutesSinceInit = Math.round(((this.getTimestamp() - this.startTime) / 60) * 100) / 100
       if (this.onAuthenticatedPage() && minutesSinceInit > 2) {
-        this.reloadPage()
+        if (this.context === PAGES.activity) {
+          this.clickOnActitivtyLine()
+          this.startTime = this.getTimestamp()
+        } else {
+          this.reloadPage()
+        }
       }
     }, 1000)
   }
   onAuthenticatedPage() {
     return ([PAGES.home, PAGES.activity, PAGES.holiday, PAGES.fees].indexOf(this.context) !== -1)
+  }
+  clickOnActitivtyLine() {
+    this.log('simulate a click on an activity line n°' + (this.activityLineActive + 1))
+    oGetObjetChamp('TAM_PAGPRI').OnSelectLigne(this.activityLineActive, 0, null)
+    // will alternate clicking on first & second line
+    this.activityLineActive = (this.activityLineActive === 0 ? 1 : 0)
   }
   reloadPage() {
     _JSL(_PAGE_, 'BTN_FERPAG', '_self', '', '')
@@ -127,6 +139,13 @@ class Abs {
     }
     this.context = context
   }
+  fixActivityDisplay() {
+    this.log('fixing activity display')
+    // this fix an error when sometimes the table is not shown
+    document.querySelector('#tzdlzTAM_PAGPRI').firstChild.style.width = ''
+    // this allow syges web to recalculate table display
+    this.clickOnActitivtyLine()
+  }
   updateContext() {
     this.log('updating context : ' + this.context)
     document.body.classList.add('abs')
@@ -138,6 +157,8 @@ class Abs {
     } else if (this.context === PAGES.home) {
       this.getPersonalData()
       this.showMask()
+    } else if (this.context === PAGES.activity) {
+      this.fixActivityDisplay()
     } else {
       // if no mask created yet for the current context
       this.hideMask()
